@@ -131,7 +131,7 @@ public class jdlSuaSoLuong extends javax.swing.JDialog {
             return;
         }
         ThongBao.ThongBao("Thành công", "Thành công");
-        sanPhamCtrl.LoadBangSanPham(tblSanPhamChiTiet, "");
+//        sanPhamCtrl.LoadBangSanPham(tblSanPhamChiTiet, "");
         this.dispose();
     }//GEN-LAST:event_btnCapNhatActionPerformed
 

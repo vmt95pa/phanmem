@@ -17,6 +17,7 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.prefs.Preferences;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.SwingWorker;
@@ -61,10 +62,10 @@ public class FormMain extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         buttonGroup1 = new javax.swing.ButtonGroup();
         nuoc = new com.toedter.components.JLocaleChooser();
+        jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         btnQLSanPham = new javax.swing.JToggleButton();
         btnQLPhieuNhap = new javax.swing.JToggleButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
         db = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         lblGio = new javax.swing.JLabel();
@@ -108,6 +109,8 @@ public class FormMain extends javax.swing.JFrame {
         nuoc.setSelectedIndex(11);
         nuoc.setToolTipText("");
 
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(1200, 700));
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PHẦN MỀM QUẢN LÝ BÁN HÀNG THANH HIỀN");
         setMinimumSize(new java.awt.Dimension(1421, 853));
@@ -115,6 +118,9 @@ public class FormMain extends javax.swing.JFrame {
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
             }
         });
 
@@ -185,8 +191,6 @@ public class FormMain extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(1200, 700));
-
         db.setBackground(new java.awt.Color(51, 51, 51));
         db.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         db.setOpaque(true);
@@ -195,9 +199,7 @@ public class FormMain extends javax.swing.JFrame {
                 dbStateChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(db);
-
-        getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(db, java.awt.BorderLayout.CENTER);
 
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
         jPanel2.setPreferredSize(new java.awt.Dimension(1498, 20));
@@ -271,6 +273,10 @@ public class FormMain extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
 
+        
+        
+        
+        
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
@@ -284,6 +290,8 @@ public class FormMain extends javax.swing.JFrame {
 
                 return null;
             }
+            
+            
         };
         mySwingWorker.execute();
 
@@ -345,6 +353,12 @@ public class FormMain extends javax.swing.JFrame {
         System.exit(1);
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        Preferences prefs;
+        prefs = Preferences.userRoot().node(this.getClass().getName());
+        prefs.put("RUNNING", "false");
+    }//GEN-LAST:event_formWindowClosed
 
     public void LoadForm(JInternalFrame form, String name) {
         if (form == null) {

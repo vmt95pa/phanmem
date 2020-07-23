@@ -6,9 +6,11 @@
 package DAO;
 
 import GUI.ThongBao;
+import com.mysql.cj.util.Util;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,6 +29,13 @@ public class dbconnection {
     private static Connection conn = null;
 
     public static Connection connect() {
+        if (Util.isRunningOnWindows()) {
+            System.out.println("Đang kết nối db");
+        }
+        if (Util.interfaceExists(dbURL)) {
+            System.out.println("Đã vào web coba");
+        }
+        
         boolean flag = true;
         do {
             try {
@@ -185,5 +194,26 @@ public class dbconnection {
             Logger.getLogger(dbconnection.class.getName()).log(Level.SEVERE, null, ex);
         }
         return version;
+    }
+     public final void onStart() {
+        Preferences prefs;
+        prefs = Preferences.userRoot().node(this.getClass().getName());
+        prefs.put("RUNNING", "true");
+    }
+
+    public final void onFinish() {
+        Preferences prefs;
+        prefs = Preferences.userRoot().node(this.getClass().getName());
+        prefs.put("RUNNING", "false");
+    }
+
+    public boolean isRunning() {
+        Preferences prefs;
+        prefs = Preferences.userRoot().node(this.getClass().getName());
+        return prefs.get("RUNNING", null) != null ? Boolean.valueOf(prefs.get("RUNNING", null)) : false;
+    }
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {
+        onFinish();
     }
 }

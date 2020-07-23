@@ -9,6 +9,8 @@ import BLL.DialogWait;
 import BLL.HoTro;
 import DAO.dbconnection;
 import java.util.Locale;
+import java.util.prefs.Preferences;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -17,7 +19,7 @@ import javax.swing.SwingWorker;
  */
 public class FormLoading extends javax.swing.JFrame {
 
-    public static Locale quocTich = new Locale("Vietnamese", "vi");
+//    public static Locale quocTich = new Locale("Vietnamese", "vi");
     public static double thisVersion = 1.1;
     public static double newVersion = 0.1;
     public static FormMain frm = null;
@@ -142,7 +144,7 @@ public class FormLoading extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-
+      
 //        GUI.FormQuanLySanPham frm = new FormQuanLySanPham();
 //        frm.setVisible(true);
 //        this.dispose();
@@ -156,6 +158,7 @@ public class FormLoading extends javax.swing.JFrame {
 
         DialogWait wait = new DialogWait();
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<Void, Void>() {
+
             @Override
             protected Void doInBackground() throws Exception {
 //---------------------This action ------------------------------------------------------------
@@ -168,11 +171,17 @@ public class FormLoading extends javax.swing.JFrame {
                         btnThoat.setEnabled(true);
                         return null;
                     }
-                    frm = new FormMain();
-                    frm.setVisible(true);
+                    try {
+                        frm = new FormMain();
+                        frm.setVisible(true);
 //                    wait.close();
 //                   return null;
-                    FormLoading.this.dispose();
+                        FormLoading.this.dispose();
+                    } catch (Exception e) {
+                        ThongBao.ThongBaoLoai2("Đã xãy ra lỗi", "Thông báo");
+                        wait.close();
+                        return null;
+                    }
 
                 }
 
@@ -183,10 +192,12 @@ public class FormLoading extends javax.swing.JFrame {
                 return null;
 
             }
+
         };
 
         mySwingWorker.execute();
         wait.loading();
+        System.out.println("quang huy");
 
 
     }//GEN-LAST:event_formWindowOpened
@@ -195,6 +206,7 @@ public class FormLoading extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -227,6 +239,8 @@ public class FormLoading extends javax.swing.JFrame {
             }
         });
     }
+
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnThoat;

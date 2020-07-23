@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,39 +39,45 @@ import javax.swing.table.TableModel;
  */
 public class sanPhamCtrl {
 
-    public static void LoadBangSanPham(JTable tbl, String timKiem) {
-        List<dtoSanPham> list = new ArrayList<>();
-        DefaultTableModel tblModel = (DefaultTableModel) tbl.getModel();
-        tblModel.setRowCount(0);
-        THFormat.HeaderTable(tbl);
-        if (timKiem.trim().isEmpty()) {
-            list = daoSanPham.SanPham();
-        } else {
-            String sql = "tensp like N'%" + timKiem + "%' or ";
-            sql += "tendanhmuc like N'%" + timKiem + "%' or ";
-            sql += "tenncc like N'%" + timKiem + "%' or ";
-            sql += "quycach like N'%" + timKiem + "%'";
-            list = daoSanPham.SanPhamBy(sql);
-        }
-        Object[] row = new Object[12];
-        for (dtoSanPham s : list) {
-            row[0] = tblModel.getRowCount() + 1;
-            THFormat.fillTable(s, row);
-            tblModel.addRow(row);
-            tbl.setShowGrid(true);
+    public static int offset = 0;
+    public static int count = 5;
+    public static int tongSP = daoSanPham.TongSanPham("");
+    public static int currentPage = (offset / count) + 1;
+    public static int countPage = (tongSP / count) + 1;
 
-        }
-        THFormat.tblColAlign(tbl, 0, JLabel.CENTER);
-        THFormat.tblColAlign(tbl, 2, JLabel.CENTER);
-        THFormat.tblColAlign(tbl, 3, JLabel.CENTER);
-        THFormat.tblColAlign(tbl, 4, JLabel.RIGHT);
-        THFormat.tblColAlign(tbl, 5, JLabel.RIGHT);
-        THFormat.tblColAlign(tbl, 6, JLabel.RIGHT);
-        THFormat.tblColAlign(tbl, 7, JLabel.RIGHT);
-        THFormat.tblColAlign(tbl, 8, JLabel.RIGHT);
-        THFormat.tblColAlign(tbl, 9, JLabel.RIGHT);
-
-    }
+//    public static void LoadBangSanPham(JTable tbl, String timKiem) {
+//        List<dtoSanPham> list = new ArrayList<>();
+//        DefaultTableModel tblModel = (DefaultTableModel) tbl.getModel();
+//        tblModel.setRowCount(0);
+//        THFormat.HeaderTable(tbl);
+//        if (timKiem.trim().isEmpty()) {
+//            list = daoSanPham.SanPham();
+//        } else {
+//            String sql = "tensp like N'%" + timKiem + "%' or ";
+//            sql += "tendanhmuc like N'%" + timKiem + "%' or ";
+//            sql += "tenncc like N'%" + timKiem + "%' or ";
+//            sql += "quycach like N'%" + timKiem + "%'";
+//            list = daoSanPham.SanPhamBy(sql);
+//        }
+//        Object[] row = new Object[12];
+//        for (dtoSanPham s : list) {
+//            row[0] = tblModel.getRowCount() + 1;
+//            THFormat.fillTable(s, row);
+//            tblModel.addRow(row);
+//            tbl.setShowGrid(true);
+//
+//        }
+//        THFormat.tblColAlign(tbl, 0, JLabel.CENTER);
+//        THFormat.tblColAlign(tbl, 2, JLabel.CENTER);
+//        THFormat.tblColAlign(tbl, 3, JLabel.CENTER);
+//        THFormat.tblColAlign(tbl, 4, JLabel.RIGHT);
+//        THFormat.tblColAlign(tbl, 5, JLabel.RIGHT);
+//        THFormat.tblColAlign(tbl, 6, JLabel.RIGHT);
+//        THFormat.tblColAlign(tbl, 7, JLabel.RIGHT);
+//        THFormat.tblColAlign(tbl, 8, JLabel.RIGHT);
+//        THFormat.tblColAlign(tbl, 9, JLabel.RIGHT);
+//
+//    }
 
     public static List<dtoSanPham> NhapNhieuSanPham(List<dtoSanPham> list) {
         List<dtoSanPham> listLoi = new ArrayList<>();
@@ -223,5 +231,86 @@ public class sanPhamCtrl {
         THFormat.tblColAlign(tbl, 8, JLabel.RIGHT);
         THFormat.tblColAlign(tbl, 9, JLabel.RIGHT);
 
+    }
+
+    public static List<dtoSanPham> ListSPSearch(String ncc, String quyCach, String danhMuc) {
+        List<dtoSanPham> list = null;
+        String str;
+        str = "and tendanhmuc like N'%" + danhMuc + "%'"
+                + " and tenncc like N'%" + ncc + "%' "
+                + "and QuyCach like N'%" + quyCach + "%'";
+
+        list = daoSanPham.SanPhamSearch(offset, count, str);
+        return list;
+    }
+
+    public static void FillComboboxSearch(JComboBox cbbNCC, JComboBox cbbDanhMuc, JComboBox cbbQuyCach) {
+        List<String> ncc = daoSanPham.ListCBBBy("tenncc");
+        List<String> danhMuc = daoSanPham.ListCBBBy("tendanhmuc");
+        List<String> quyCach = daoSanPham.ListCBBBy("QuyCach");
+
+        HoTro.fillCombobox2(ncc, cbbNCC);
+        HoTro.fillCombobox2(danhMuc, cbbDanhMuc);
+        HoTro.fillCombobox2(quyCach, cbbQuyCach);
+    }
+
+    public static void FillTableSearch(String nextOrPre, JTable tbl, JLabel lblTitle, String ncc, String quyCach, String danhMuc) {
+
+        switch (nextOrPre) {
+            case "":
+                offset = 0;
+                break;
+            case "next":
+                offset += count;
+                break;
+            case "pre":
+                offset -= count;
+                break;
+            
+                
+        }
+
+        List<dtoSanPham> list = null;
+        String str;
+        str = "and tendanhmuc like N'%" + danhMuc + "%'"
+                + " and tenncc like N'%" + ncc + "%' "
+                + "and QuyCach like N'%" + quyCach + "%'";
+        tongSP = daoSanPham.TongSanPham(str);
+        list = daoSanPham.SanPhamSearch(offset, count, str);
+        fillBangSP(tbl, list);
+        PageCount(lblTitle);
+    }
+
+    public static void PageCount(JLabel lblTitle) {
+        currentPage = (offset / count) + 1;
+        countPage = (tongSP / count) + 1;
+
+        String title = "<html>" + currentPage + "/" + countPage + "<span style='font-style: italic'> Tổng " + tongSP + " sản phẩm </span></html>";
+        lblTitle.setText(title);
+    }
+    public static void TableSanPhamSearch(String option, JButton btnPre, JButton btnNext, JComboBox cbbNCC, JComboBox cbbDanhMuc, JComboBox cbbQuyCach, JTable tblChonSanPham, JLabel lblPage  ) {
+        
+        String ncc = "";
+        String quyCach = "";
+        String danhMuc = "";
+        if (cbbNCC.getSelectedIndex() != 0) {
+            ncc = cbbNCC.getSelectedItem().toString();
+        }
+        if (cbbQuyCach.getSelectedIndex() != 0) {
+            quyCach = cbbQuyCach.getSelectedItem().toString();
+        }
+        if (cbbDanhMuc.getSelectedIndex() != 0) {
+            danhMuc = cbbDanhMuc.getSelectedItem().toString();
+        }
+
+        sanPhamCtrl.FillTableSearch(option, tblChonSanPham, lblPage, ncc, quyCach, danhMuc);
+        btnNext.setEnabled(true);
+        btnPre.setEnabled(true);
+        if (sanPhamCtrl.currentPage == sanPhamCtrl.countPage) {
+            btnNext.setEnabled(false);
+        }
+        if (sanPhamCtrl.currentPage == 1) {
+            btnPre.setEnabled(false);
+        }
     }
 }

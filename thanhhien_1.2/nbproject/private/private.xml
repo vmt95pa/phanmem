@@ -4,11 +4,17 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/DAO/daoNhapHang.java</file>
+            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/GUI/jdlSuaSoLuong.java</file>
+            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/BLL/sanPhamCtrl.java</file>
+            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/GUI/FormMain.java</file>
             <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/GUI/NhapHangForm2.java</file>
             <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/BLL/phieuNhapCtrl.java</file>
-            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/BLL/nhaCungCapCtrl.java</file>
-            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/BLL/THFormat.java</file>
+            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/DAO/dbconnection.java</file>
+            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/GUI/FormLoading.java</file>
+            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/BLL/DialogWait.java</file>
             <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/GUI/ThongTinSanPhamForm.java</file>
+            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/BLL/THFormat.java</file>
+            <file>file:/C:/Users/bumte/Documents/NetBeansProjects/thanhhienproject/thanhhien_1.2/src/DAO/daoSanPham.java</file>
         </group>
     </open-files>
 </project-private>

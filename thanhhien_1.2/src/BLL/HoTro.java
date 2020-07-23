@@ -25,6 +25,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -65,7 +66,6 @@ public class HoTro {
 //            return 0;
 //        }
 //    }
-
     public static String so(String chu, int len) {
         String so = chu;
         if (!chu.matches("^[0-9]*$") || chu.length() > len) {
@@ -116,12 +116,26 @@ public class HoTro {
         }
 
     }
+    public static String dateMySQL(Date date) {
+        try {
+            Timestamp ts = new Timestamp(date.getTime());
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+            return formatter.format(ts);
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
 
     public static void filter(String timKiem, JTable tbl) {
-        DefaultTableModel dm = (DefaultTableModel) tbl.getModel();
-        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
-        tbl.setRowSorter(tr);
-        tr.setRowFilter(RowFilter.regexFilter(timKiem));
+        try {
+            DefaultTableModel dm = (DefaultTableModel) tbl.getModel();
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+            tbl.setRowSorter(tr);
+            tr.setRowFilter(RowFilter.regexFilter(timKiem));
+        } catch (Exception e) {
+            System.out.println("Lôi tìm kiếm");
+        }
     }
 
     public static void ClockExample(JLabel time, JLabel date) {
@@ -132,7 +146,7 @@ public class HoTro {
                     while (true) {
                         Calendar cal = new GregorianCalendar();
                         int second = cal.get(Calendar.SECOND);
-                        String ss = second < 10 ? "0" + second: "" + second;
+                        String ss = second < 10 ? "0" + second : "" + second;
                         int minute = cal.get(Calendar.MINUTE);
                         String mm = minute < 10 ? "0" + minute : "" + minute;
                         int hour = cal.get(Calendar.HOUR_OF_DAY);
@@ -215,6 +229,18 @@ public class HoTro {
         DefaultComboBoxModel cbbBoxModel = (DefaultComboBoxModel) cbb.getModel();
         cbbBoxModel.removeAllElements();
         for (String item : list) {
+            cbbBoxModel.addElement(item);
+        }
+    }
+
+    public static void fillCombobox2(List<String> list, JComboBox cbb) {
+        DefaultComboBoxModel cbbBoxModel = (DefaultComboBoxModel) cbb.getModel();
+        cbbBoxModel.removeAllElements();
+        cbbBoxModel.addElement("Tất cả");
+        for (String item : list) {
+            if (item.trim().isEmpty()) {
+                item = "Khác";
+            }
             cbbBoxModel.addElement(item);
         }
     }

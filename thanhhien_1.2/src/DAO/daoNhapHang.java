@@ -607,10 +607,92 @@ public class daoNhapHang {
 
     public static dtoPhieuNhap getPhieuNhapByID(String idPhieuNhap) {
         dtoPhieuNhap phieuNhap = null;
-        
-        
-        
+
         return phieuNhap;
+    }
+
+    public static List<Date> ListNgayNhap() {
+        List<Date> list = new ArrayList<>();
+
+        return list;
+    }
+
+    public static List<dtoPhieuNhap> ListPhieuNhap(Date tuNgay, Date denNgay, String trangThai, int offset, int count) {
+        ArrayList<dtoPhieuNhap> list = new ArrayList<>();
+//    kết nối db
+        if ((conn = dbconnection.connect()) == null) {
+
+            System.out.println("Chưa kết nối được db");
+            return null;
+        }
+//    -----------------
+        String getPN = "select * FROM phieunhap WHERE "
+                + "Date(phieunhap.NgayTaoPhieuNhap) >= '" + HoTro.dateMySQL(tuNgay) + "' and date(phieunhap.NgayTaoPhieuNhap) <= '" + HoTro.dateMySQL(denNgay) + "' "
+                + " " + trangThai + " ORDER BY phieunhap.NgayTaoPhieuNhap DESC limit " + offset + ", " + count + " ";
+//        String getPN = "select * from phieunhap where TrangThaiPhieuNhap >= " + trangThai + " ORDER BY phieunhap.NgayTaoPhieuNhap DESC limit 10";
+        System.out.println(getPN);
+        ResultSet rs = dbconnection.getData(getPN);
+        dtoPhieuNhap pn = null;
+
+        try {
+            while (rs.next()) {//String ghiChuPhieuNhap, String idNhaCungCap, String idPhieuNhap, String tenPhieuNhap, Date nagyTaoPhieuNhap, double soTienTraTruoc, double tongTienPhieuNhap, double tongTienConLai, int trangThaiPhieuNhap, dtoCTPhieuNhap ctPhieuNhap
+                String idPhieuNhap = rs.getString("IdPhieuNhap");
+                String idNCC = rs.getString("IDNhaCungCap");
+                String tenNCC = "Không có nhà cung cấp";
+                dtoNhaCungCap nhaCungCap = null;
+                List<dtoCTPhieuNhap> listCTPhieuNhap = GetListCTPhieuNhap(idPhieuNhap);
+                ResultSet ncc = dbconnection.getData("select * from NhaCungCap where IDNhaCungCap = '" + idNCC + "'");
+                if (ncc.next()) {
+                    tenNCC = ncc.getString("TenNhaCungCap");
+                    nhaCungCap = daoNhaCungCap.SetDTONhaCungCap(ncc);
+
+                };
+
+                pn = new dtoPhieuNhap(
+                        rs.getString("GhiChuPhieuNhap"),
+                        idNCC,
+                        idPhieuNhap,
+                        rs.getString("TenPhieuNhap"),
+                        tenNCC,
+                        rs.getTimestamp("NgayTaoPhieuNhap"),
+                        rs.getDouble("SoTienTraTruoc"),
+                        rs.getDouble("TongPhieuNhap"),
+                        rs.getDouble("TongTienConLai"),
+                        rs.getInt("TrangThaiPhieuNhap"),
+                        nhaCungCap,
+                        listCTPhieuNhap);
+                list.add(pn);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(daoNhapHang.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+//    -------------
+//        try {
+//            conn.close();
+//            System.out.println("kết thúc");
+//        } catch (SQLException ex) {
+//            Logger.getLogger(daoSanPham.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        return list;
+    }
+
+    public static int countPhieuNhap(Date tuNgay, Date denNgay, String trangThai) {
+        int total = 0;
+        String cauLenh = "select count(IdPhieuNhap) as tong FROM phieunhap WHERE "
+                + "Date(phieunhap.NgayTaoPhieuNhap) >= '" + HoTro.dateMySQL(tuNgay) + "' and date(phieunhap.NgayTaoPhieuNhap) <= '" + HoTro.dateMySQL(denNgay) + "' "
+                + " " + trangThai + " ";
+        
+        ResultSet rs = dbconnection.getData(cauLenh);
+        try {
+            if (rs.next()) {
+                total = rs.getInt("tong");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(daoNhapHang.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
     }
 
 }

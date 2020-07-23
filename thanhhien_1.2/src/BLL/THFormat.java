@@ -70,7 +70,7 @@ public class THFormat {
         donViTinh dvt = new donViTinh(s.getDonViTinh());
         row[1] = THFormat.TenSanPhamTable(s.getTtSanPham().getQuyCach(), s.getTtSanPham().getDoDay(), s.getTtSanPham().getDai(), s.getTenSanPham(), s.getDonViTinh(), s.getTenNhaCungCap());
         row[2] = s.getTtSanPham().getQuyCach();
-        row[3] = s.getTtSanPham().getDai() + dvt.getDai();
+        row[3] = s.getTtSanPham().getDoDay()+ dvt.getDay();
         row[4] = s.getTtSanPham().getTrongLuong() + " (" + dvt.getTrongLuong() + "/" + dvt.getDvtSi() + ")";
         double tongKhoiLuong = s.getTtSanPham().getTrongLuong() * s.getSoLuong();
         double tongChieuDai = s.getTtSanPham().getDai() * s.getSoLuong();
@@ -87,8 +87,8 @@ public class THFormat {
         String ngayThang = HoTro.dateTimeString(pn.getNagyTaoPhieuNhap());
         String ten = pn.getTenPhieuNhap() + "-" + pn.getTenNCC();
         int tt = pn.getTrangThaiPhieuNhap();
-        String trangThai = tt == 0 ? "Đã xóa" : tt == 1 ? "Đã lưu" : "Đã nhập";
-        String mau = tt == 0 ? MauDo : tt == 1 ? MauXanhDuong : MauXanhLa;
+        String trangThai = tt == 0 ? "Đã xóa" : tt == 1 ? "Chưa nhập" : tt == 2 ? "Đã nhập" : "Chưa xác định";
+        String mau = tt == 0 ? MauDo : tt == 1 ? MauXanhDuong : tt == 2 ? MauXanhLa :"";
         row[0] = "<html><span>" + ten + " </span><br><span style=' font-size: 10px ;font-style: italic '><strong>Ngày tạo:</strong>" + ngayThang + "<br><span style='color: " + mau + ";padding: 10px'>" + trangThai + "</span></span><html>";
         row[1] = HoTro.dateTimeString(pn.getNagyTaoPhieuNhap());
         row[4] = pn;
@@ -111,20 +111,22 @@ public class THFormat {
 
     public static void fillTableCTPhieuNhap2(dtoCTPhieuNhap ctpn, Object[] r) {
         String donviNhap = ctpn.getDonViNhap();
-        String tenSP = "<html>"
-                + "<ul>"
-                + "<li>Tên: " + ctpn.getTenSP() + "</li>"
-                + "<li>Số lượng: " + ctpn.getSoLuong() + ctpn.getDonViNhap() + "</li>"
-                + "<li>Đơn giá: " + ctpn.getDonGiaNhap() + "VND</li>"
-                + "<li>Tổng tiền: " + ctpn.getTongCTPhieuNhap() + "VND</li>"
-                + "</ul>"
+        String tenSP = ctpn.getTenSP();
+        double soLuong = ctpn.getSoLuong();
+        double donGiaNhap = ctpn.getDonGiaNhap();
+        double tongTien = ctpn.getTongCTPhieuNhap();
+
+        String thongTinSanPham = "<html>"
+                + "<span><strong>Sản phẩm: </strong> " + tenSP + "</span><br>"
+                + "<span><strong>Số lượng: </strong> " + HoTro.DoubleToString(soLuong) + " <strong> " + donviNhap + "</strong></span><br>"
+                + "<span><strong>Đơn giá: </strong> " + HoTro.DoubleToString(donGiaNhap) + "đ</span><br>"
+                + "<span><strong>Tổng tiền: </strong> " + HoTro.DoubleToString(tongTien) + "đ</span><br>"
                 + " <html>";
 
         r[0] = ctpn;
-        r[2] = tenSP;
-       r[3] = "<html><a href='#' style='color: red'>XÓA<a><html>";
-        
-        
+        r[2] = thongTinSanPham;
+        r[3] = "<html><a href='#' style='color: red'>XÓA<a><html>";
+
     }
 
     public static void TableChonNhaCungCap(dtoNhaCungCap ncc, Object[] row) {

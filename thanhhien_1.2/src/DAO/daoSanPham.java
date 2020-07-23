@@ -37,26 +37,6 @@ public class daoSanPham {
         ResultSet rs = dbconnection.getData(sql);
         try {
             while (rs.next()) {
-//                dtoThuocTinhSanPham tt = new dtoThuocTinhSanPham(
-//                        rs.getString("thuoctinhkhac"),
-//                        rs.getString("quycach"),
-//                        rs.getDouble("trongluong"),
-//                        rs.getDouble("doday"),
-//                        rs.getDouble("dai"),
-//                        rs.getInt("idthuoctinh"));
-////                System.out.println(tt.getDai());
-//                dtoSanPham s = new dtoSanPham(
-//                        rs.getString("idsanpham"),
-//                        rs.getString("tenncc"),
-//                        rs.getString("tendanhmuc"),
-//                        rs.getString("tensp"),
-//                        rs.getString("donvitinh"),
-//                        rs.getDouble("giasi"),
-//                        rs.getDouble("giale"),
-//                        rs.getDouble("soluong"),
-//                        rs.getInt("idthuoctinh"),
-//                        tt);
-////                System.out.println(s.getTenSanPham());
                 sp.add(GhiThongTinSPVaoDto(rs));
             }
         } catch (SQLException ex) {
@@ -327,5 +307,81 @@ public class daoSanPham {
         }
         return false;
     }
+
+    public static List<dtoSanPham> SanPhamSearch(int offset, int count, String search) {
+        //    kết nối db
+        if ((conn = dbconnection.connect()) == null) {
+            System.out.println("Chưa kết nối được db");
+            return null;
+        }
+//    -----------------
+//    Làm việc
+        List<dtoSanPham> sp = new ArrayList<>();
+        String sql = "select * from sanphamchitiet where trangthaisanpham = 1 " + search + " limit " + offset + ", " + count + " ";
+        System.out.println(sql);
+        ResultSet rs = dbconnection.getData(sql);
+        try {
+            while (rs.next()) {
+                sp.add(GhiThongTinSPVaoDto(rs));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(daoSanPham.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+//    ------------- 
+//        try {
+//            conn.close();
+//            System.out.println("kết thúc");
+//        } catch (SQLException ex) {
+//            Logger.getLogger(daoSanPham.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        return sp;
+    }
+
+    public static int TongSanPham(String str) {
+        int tong = -1;
+        if ((conn = dbconnection.connect()) == null) {
+            System.out.println("Chưa kết nối được db");
+            return -1;
+        }
+
+        String cauLenh = "SELECT COUNT(IDSanPham) as tong from `sanphamchitiet` where trangthaisanpham = 1 "+str+"";
+        ResultSet rs = dbconnection.getData(cauLenh);
+        try {
+            if (rs.next()) {
+                tong = rs.getInt("tong");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(daoSanPham.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return tong;
+    }
+
+    public static List<String> ListCBBBy(String str) {
+        List<String> list = new ArrayList<>();
+        if ((conn = dbconnection.connect()) == null) {
+            System.out.println("Chưa kết nối được db");
+            return null;
+        }
+
+        String cauLenh = "SELECT " + str + " FROM `sanphamchitiet` GROUP BY " + str + "";
+     
+        ResultSet rs = dbconnection.getData(cauLenh);
+        String item = "";
+        try {
+            while (rs.next()) {
+                item = rs.getString(str);
+          
+                list.add(item);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(daoSanPham.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
 }
+
+
 //System.out.println(((PreparedStatement) themSanPham));
