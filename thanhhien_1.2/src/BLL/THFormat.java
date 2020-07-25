@@ -70,7 +70,7 @@ public class THFormat {
         donViTinh dvt = new donViTinh(s.getDonViTinh());
         row[1] = THFormat.TenSanPhamTable(s.getTtSanPham().getQuyCach(), s.getTtSanPham().getDoDay(), s.getTtSanPham().getDai(), s.getTenSanPham(), s.getDonViTinh(), s.getTenNhaCungCap());
         row[2] = s.getTtSanPham().getQuyCach();
-        row[3] = s.getTtSanPham().getDoDay()+ dvt.getDay();
+        row[3] = s.getTtSanPham().getDoDay() + dvt.getDay();
         row[4] = s.getTtSanPham().getTrongLuong() + " (" + dvt.getTrongLuong() + "/" + dvt.getDvtSi() + ")";
         double tongKhoiLuong = s.getTtSanPham().getTrongLuong() * s.getSoLuong();
         double tongChieuDai = s.getTtSanPham().getDai() * s.getSoLuong();
@@ -86,10 +86,15 @@ public class THFormat {
     public static void fillTablePhieuNhap(dtoPhieuNhap pn, Object[] row) {
         String ngayThang = HoTro.dateTimeString(pn.getNagyTaoPhieuNhap());
         String ten = pn.getTenPhieuNhap() + "-" + pn.getTenNCC();
+        String dangChon = "";
         int tt = pn.getTrangThaiPhieuNhap();
         String trangThai = tt == 0 ? "Đã xóa" : tt == 1 ? "Chưa nhập" : tt == 2 ? "Đã nhập" : "Chưa xác định";
-        String mau = tt == 0 ? MauDo : tt == 1 ? MauXanhDuong : tt == 2 ? MauXanhLa :"";
-        row[0] = "<html><span>" + ten + " </span><br><span style=' font-size: 10px ;font-style: italic '><strong>Ngày tạo:</strong>" + ngayThang + "<br><span style='color: " + mau + ";padding: 10px'>" + trangThai + "</span></span><html>";
+        String mau = tt == 0 ? MauDo : tt == 1 ? MauXanhDuong : tt == 2 ? MauXanhLa : "";
+        if (phieuNhapCtrl.phieuNhapDangChon != null) {
+            dangChon = pn.getIdPhieuNhap().equals(phieuNhapCtrl.phieuNhapDangChon.getIdPhieuNhap()) ? "<span style='font-size: 24px; color: #208806'>&#9679</span>" : "";
+        }
+
+        row[0] = "<html><span>" + ten + " " + dangChon + " </span><br><span style=' font-size: 10px ;font-style: italic '><strong>Ngày tạo:</strong>" + ngayThang + "<br><span style='color: " + mau + ";padding: 10px'>" + trangThai + "</span></span><html>";
         row[1] = HoTro.dateTimeString(pn.getNagyTaoPhieuNhap());
         row[4] = pn;
 

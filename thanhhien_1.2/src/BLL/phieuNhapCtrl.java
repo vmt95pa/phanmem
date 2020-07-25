@@ -38,7 +38,7 @@ import javax.swing.table.TableColumn;
 import org.jdesktop.swingx.JXTree;
 import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
 import org.jdesktop.swingx.table.ColumnControlButton;
-import sun.awt.resources.awt;
+//import sun.awt.resources.awt;
 
 /**
  *
@@ -292,6 +292,7 @@ public class phieuNhapCtrl {
                 offset -= count;
                 break;
         }
+
         String trangThai = "";
         if (trangThaiPhieuNhap >= -1) {
             trangThai = "and TrangThaiPhieuNhap = " + trangThaiPhieuNhap + "";
@@ -299,6 +300,10 @@ public class phieuNhapCtrl {
         totalItem = daoNhapHang.countPhieuNhap(ngayDau, ngayCuoi, trangThai);
         TinhTrang();
         List<dtoPhieuNhap> list = daoNhapHang.ListPhieuNhap(ngayDau, ngayCuoi, trangThai, offset, count);
+
+        if (phieuNhapDangChon != null && !checkListItems(phieuNhapDangChon.getIdPhieuNhap(), list)) {
+            list.add(phieuNhapDaChon);
+        }
         fillPhieuNhap(tbl, list);
 
     }
@@ -312,7 +317,17 @@ public class phieuNhapCtrl {
     public static void TinhTrang() {
         currentPage = offset / count + 1;
         totalPage = (totalItem % count) == 0 ? totalItem / count : totalItem / count + 1;
-        
 
     }
+
+    public static boolean checkListItems(String item, List<dtoPhieuNhap> list) {
+        for (dtoPhieuNhap pn : list) {
+            if (pn.getIdPhieuNhap().equals(item)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
